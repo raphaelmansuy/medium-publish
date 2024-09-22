@@ -16,6 +16,7 @@ pyperclip = "^1.9.0"
 richxerox = "^1.0.1"
 markdown2 = "^2.5.0"
 bs4 = "^0.0.2"
+boto3 = "^1.35.24"
 
 [build-system]
 requires = ["poetry-core"]

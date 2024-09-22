@@ -28,14 +28,6 @@ To install Medium Publish, you need to have Python 3.12 or higher. You can insta
 poetry install
 ```
 
-Alternatively, you can clone the repository and install dependencies manually:
-
-```bash
-git clone https://github.com/yourusername/medium-publish.git
-cd medium-publish
-pip install -r requirements.txt
-```
-
 ## Usage
 
 To use Medium Publish, run the command line interface (CLI) tool with the required parameters:

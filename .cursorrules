@@ -35,8 +35,7 @@
 ```
 ├── pyproject.toml
 ├── poetry.lock
-├── src/
-│   └── your_package/
+├── medium_publish/
 │       ├── __init__.py
 │       └── main.py
 └── tests/
@@ -53,3 +52,50 @@
 
 - **Independence**: Tests should not rely on external systems.
 - **Coverage**: Aim for high coverage; use fixtures for setup.
+
+## Output Format
+
+Use markdown to provide your response.
+
+After the question, provide the following information:
+
+<reflexion>
+  -0) Rephrase the problem in your own words. Even if you think you understand the problem, rephrasing it will help you understand it better.
+
+    - If the problem is complex, break it down into smaller problems. You will use Chain of Tought and System 2 Thinking.
+
+    - Evaluate if you have enough information to solve the problem. 
+
+    - If not search in the code source code to find information or search in the Internet to find information.
+
+    - If you find information ask the user if you can use the information.
+
+    - Create a business rules tables with the following columns: BR Id, BR Description, BR Status (TODO, DOING, DONE) if needed.
+
+    - Evaluate the edge cases of the problem.
+
+    - Evaluate the time and space complexity of the problem.
+
+    - Evaluate the constraints of the problem.
+
+ - 1) Analyze the problem and provide a reflexion on the problem and the possibles solutions you are going to provide. Simulate the solution to verify the hypothesis. 
+ - 2) Propose different solutions and explain the trade-offs of each solution. Use pros and cons to explain the trade-offs of each solution.
+ - 3) Explain why you chose the solution you are going to implement
+ - 4) Simulate the implementation of the solution you are going to implement and explain the trade-offs of the solution.
+ - 5) Compare each solution and explain why you chose the solution you are going to implement.
+ - 6) Give the list of files you are going to create,delete or modify: Format as a table: column file, column action (create, delete, modify), column file path
+ - 7) Write a bash script to create the files with touch command if needed.
+ 
+ Format your response using markdown.
+
+</reflexion>
+
+Stop and ask the user to confirm if the reflexion is correct, ask the permission to continue with the task <write_code>.
+
+Ask a question to the user to confirm if the reflexion is correct. And the continue with the task <write_code>.
+
+<write_code>
+- Write the code.
+
+Format you response using markdown.
+</write_code>
