@@ -8,7 +8,7 @@ Generating accurate and contextually relevant responses using AI is more critica
 
 This implementation is based on the article: https://arxiv.org/pdf/2409.12618
 
-![Image](./photo1.jpeg)
+![Image](https://raw.githubusercontent.com/raphaelmansuy/medium-publish/refs/heads/master/demo_file/photo1.jpeg)
 
 > 💡 Iteration of Thought: Leveraging Inner Dialogue for Autonomous Large Language Model Reasoning
 
