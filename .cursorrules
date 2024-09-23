@@ -47,6 +47,8 @@
 
 - **PEP 8**: Follow for style (max 79 chars, spaces around operators, use `f-strings`).
 - **Docstrings**: Required for all public functions/classes.
+- **Logging**: Use `logging.info` for information, `logging.warning` for warnings, and `logging.error` for errors.
+- Use lazy formatting for logging.
 
 ## Testing Practices
 
