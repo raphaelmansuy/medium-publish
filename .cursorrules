@@ -47,6 +47,8 @@
 
 - **PEP 8**: Follow for style (max 79 chars, spaces around operators, use `f-strings`).
 - **Docstrings**: Required for all public functions/classes.
+- **Logging**: Use `logging.info` for information, `logging.warning` for warnings, and `logging.error` for errors.
+- Use lazy formatting for logging.
 
 ## Testing Practices
 
@@ -84,7 +86,6 @@ After the question, provide the following information:
  - 4) Simulate the implementation of the solution you are going to implement and explain the trade-offs of the solution.
  - 5) Compare each solution and explain why you chose the solution you are going to implement.
  - 6) Give the list of files you are going to create,delete or modify: Format as a table: column file, column action (create, delete, modify), column file path
- - 7) Write a bash script to create the files with touch command if needed.
  
  Format your response using markdown.
 

@@ -10,7 +10,7 @@
 <h3>1. Introduction</h3>
 <p>Generating accurate and contextually relevant responses using AI is more critical than ever. Whether you're developing chatbots, virtual assistants, or any application that relies on natural language processing, understanding how to leverage frameworks like the Iteration of Thought (IoT) can significantly enhance your results.</p>
 <p>This implementation is based on the article: https://arxiv.org/pdf/2409.12618</p>
-<p><img alt="Image" src="https://raw.githubusercontent.com/raphaelmansuy/medium-publish/refs/heads/master/demo_file/photo1.jpeg"/></p>
+<p><img alt="Image" src="https://elitizon-public.s3.us-west-2.amazonaws.com/assets//5bdfb5e28691b6a971df40f4def6b58fffcb1b1b7bf904bef972b29c560e0bf0.jpeg"/></p>
 <blockquote>
 <p>💡 Iteration of Thought: Leveraging Inner Dialogue for Autonomous Large Language Model Reasoning</p>
 </blockquote>
@@ -41,28 +41,20 @@
 <p>2️⃣  <strong>Set up OpenAI API:</strong> Obtain your API key from OpenAI and set it as an environment variable. (You can use another model for example ollama/gemma2:2b)</p>
 <p>3️⃣  <strong>Install Poetry:</strong> If you haven't already, install Poetry by following the instructions on the <a href="https://python-poetry.org/docs/#installation">Poetry website</a>.</p>
 <p>4️⃣  <strong>Clone the Repository:</strong> Clone the repository containing the IoT framework code:</p>
-<div class="codehilite">
-<pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/raphaelmansuy/iteration_of_thought
-<span class="nb">cd</span><span class="w"> </span>iteration_of_thought
+<pre><code>git clone https://github.com/raphaelmansuy/iteration_of_thought
+cd iteration_of_thought
 </code></pre>
-</div>
 <p>5️⃣  <strong>Install Dependencies:</strong> Use Poetry to install required packages:</p>
-<div class="codehilite">
-<pre><span></span><code>poetry<span class="w"> </span>install
+<pre><code>poetry install
 </code></pre>
-</div>
 <h4>Running the Program</h4>
 <p>To run the program, you can use the following command within the Poetry environment:</p>
 <p>1️⃣  <strong>Activate the Poetry Shell:</strong></p>
-<div class="codehilite">
-<pre><span></span><code>poetry<span class="w"> </span>shell
+<pre><code>poetry shell
 </code></pre>
-</div>
 <p>2️⃣  <strong>Run the Main Script:</strong></p>
-<div class="codehilite">
-<pre><span></span><code>python<span class="w"> </span>src/iot_agent/main.py<span class="w"> </span>--method<span class="w"> </span>AIoT<span class="w"> </span>--query<span class="w"> </span><span class="s2">"Your query here"</span><span class="w"> </span>--temperature<span class="w"> </span><span class="m">0</span>.5
+<pre><code>python src/iot_agent/main.py --method AIoT --query "Your query here" --temperature 0.5
 </code></pre>
-</div>
 <p>You can specify the method (<code>AIoT</code> or <code>GIoT</code>), the query, and the sampling temperature for the LLM response.</p>
 <h4>Understanding the Code Structure</h4>
 <p>The provided code consists of several key components:</p>
@@ -78,129 +70,105 @@
 <h4>Main Components</h4>
 <p>1️⃣  <strong>Imports and Configuration:</strong></p>
 <p>The code begins by importing necessary libraries and setting up configuration variables, including the OpenAI API key and model type.</p>
-<div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">signal</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
-<span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="kn">import</span> <span class="nn">click</span>
-<span class="kn">from</span> <span class="nn">rich.console</span> <span class="kn">import</span> <span class="n">Console</span>
-<span class="kn">from</span> <span class="nn">rich.panel</span> <span class="kn">import</span> <span class="n">Panel</span>
-<span class="kn">from</span> <span class="nn">rich.progress</span> <span class="kn">import</span> <span class="n">Progress</span><span class="p">,</span> <span class="n">SpinnerColumn</span><span class="p">,</span> <span class="n">TextColumn</span>
-<span class="kn">from</span> <span class="nn">rich.prompt</span> <span class="kn">import</span> <span class="n">Prompt</span>
-<span class="kn">from</span> <span class="nn">rich.table</span> <span class="kn">import</span> <span class="n">Table</span>
-<span class="kn">from</span> <span class="nn">rich.markdown</span> <span class="kn">import</span> <span class="n">Markdown</span>
-<span class="kn">from</span> <span class="nn">litellm</span> <span class="kn">import</span> <span class="n">completion</span>
-<span class="kn">import</span> <span class="nn">requests</span>  <span class="c1"># Added for handling URL requests</span>
+<pre><code>import os
+import time
+import signal
+from typing import Optional
+from loguru import logger
+import click
+from rich.console import Console
+from rich.panel import Panel
+from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.prompt import Prompt
+from rich.table import Table
+from rich.markdown import Markdown
+from litellm import completion
+import requests  # Added for handling URL requests
 </code></pre>
-</div>
 <p>2️⃣  <strong>API Key Handling:</strong></p>
 <p>The API key is retrieved from the environment variables. If it is not set, an error is raised.</p>
-<div class="codehilite">
-<pre><span></span><code><span class="n">API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_API_KEY"</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">API_KEY</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"OpenAI API key must be set as an environment variable."</span><span class="p">)</span>
+<pre><code>API_KEY = os.getenv("OPENAI_API_KEY")
+if not API_KEY:
+    raise ValueError("OpenAI API key must be set as an environment variable.")
 </code></pre>
-</div>
 <p>3️⃣  <strong>IterationOfThought Class:</strong></p>
 <p>This class encapsulates the logic for both AIoT and GIoT methods. It initializes with parameters such as the model type, maximum iterations, timeout settings, and temperature.</p>
-<div class="codehilite">
-<pre><span></span><code><span class="k">class</span> <span class="nc">IterationOfThought</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">MODEL</span><span class="p">,</span> <span class="n">max_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="o">=</span> <span class="n">max_iterations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span>
+<pre><code>class IterationOfThought:
+    def __init__(self, model: str = MODEL, max_iterations: int = 5, timeout: int = 30, temperature: float = 0.5):
+        self.model = model
+        self.max_iterations = max_iterations
+        self.timeout = timeout
+        self.temperature = temperature
 </code></pre>
-</div>
 <p>4️⃣  <strong>API Call Method:</strong></p>
 <p>The <code>_call_llm</code> method handles the interaction with the OpenAI API, including error handling for rate limits.</p>
-<div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">_call_llm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_retries</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">console</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[bold green]Calling </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2"> API..."</span><span class="p">,</span> <span class="n">spinner</span><span class="o">=</span><span class="s2">"dots"</span><span class="p">):</span>
-                <span class="n">response</span> <span class="o">=</span> <span class="n">completion</span><span class="p">(</span>
-                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
-                    <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span>
-                    <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
-                <span class="p">)</span>
-            <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s2">"choices"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"message"</span><span class="p">][</span><span class="s2">"content"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-            <span class="k">return</span> <span class="s2">""</span>
-    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">"[red]Failed to get a response from OpenAI API after max retries"</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s2">""</span>
+<pre><code>def _call_llm(self, prompt: str, temperature: Optional[float] = None, max_retries: int = 3) -&gt; str:
+    for _ in range(max_retries):
+        try:
+            with console.status(f"[bold green]Calling {self.model} API...", spinner="dots"):
+                response = completion(
+                    model=self.model,
+                    temperature=temperature or self.temperature,
+                    messages=[{"role": "user", "content": prompt}],
+                )
+            return response["choices"][0]["message"]["content"].strip()
+        except Exception as e:
+            console.print(f"[red]Error: {e}")
+            return ""
+    console.print("[red]Failed to get a response from OpenAI API after max retries")
+    return ""
 </code></pre>
-</div>
 <p>5️⃣  <strong>Inner Dialogue Agent:</strong></p>
 <p>This method generates a new prompt based on the previous response, encouraging deeper reasoning.</p>
-<div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">inner_dialogue_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">previous_response</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="n">prompt</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"Given the original query: '</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">' and the previous response: '</span><span class="si">{</span><span class="n">previous_response</span><span class="si">}</span><span class="s2">', "</span>
-        <span class="s2">"generate an instructive and context-specific prompt to refine and improve the answer."</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_llm</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+<pre><code>def inner_dialogue_agent(self, query: str, previous_response: str) -&gt; str:
+    prompt = (
+        f"Given the original query: '{query}' and the previous response: '{previous_response}', "
+        "generate an instructive and context-specific prompt to refine and improve the answer."
+    )
+    return self._call_llm(prompt)
 </code></pre>
-</div>
 <p>6️⃣  <strong>AIoT and GIoT Methods:</strong></p>
 <p>The <code>aiot</code> method implements the autonomous iteration process, while the <code>giot</code> method follows a fixed number of iterations.</p>
-<div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">aiot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="c1"># Implementation of AIoT</span>
+<pre><code>def aiot(self, query: str) -&gt; str:
+    # Implementation of AIoT
 </code></pre>
-</div>
-<div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">giot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fixed_iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="c1"># Implementation of GIoT</span>
+<pre><code>def giot(self, query: str, fixed_iterations: int) -&gt; str:
+    # Implementation of GIoT
 </code></pre>
-</div>
 <p>7️⃣  <strong>User Interaction:</strong></p>
 <p>The <code>get_user_query</code> function prompts the user for input, allowing for a sample query or a custom one.</p>
-<div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">get_user_query</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="n">user_input</span> <span class="o">=</span> <span class="n">Prompt</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="s2">"Query"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">sample_query</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">user_input</span>
+<pre><code>def get_user_query() -&gt; str:
+    user_input = Prompt.ask("Query", default=sample_query)
+    return user_input
 </code></pre>
-</div>
 <p>8️⃣  <strong>Main Function:</strong></p>
 <p>The <code>main</code> function orchestrates the execution of the program, handling user input and displaying results.</p>
-<div class="codehilite">
-<pre><span></span><code><span class="nd">@click</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
-<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">"--method"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Choice</span><span class="p">([</span><span class="s2">"AIoT"</span><span class="p">,</span> <span class="s2">"GIoT"</span><span class="p">,</span> <span class="s2">"both"</span><span class="p">]),</span> <span class="n">default</span><span class="o">=</span><span class="s2">"AIoT"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Choose the method to run"</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="c1"># Main execution logic</span>
+<pre><code>@click.command()
+@click.option("--method", type=click.Choice(["AIoT", "GIoT", "both"]), default="AIoT", help="Choose the method to run")
+def main(method: str) -&gt; None:
+    # Main execution logic
 </code></pre>
-</div>
 <h3>4. Examples of IoT in Action</h3>
 <h4>Simple Example: Basic Query Handling</h4>
 <p>Let's start with a simple example using AIoT:</p>
-<div class="codehilite">
-<pre><span></span><code><span class="n">sample_query</span> <span class="o">=</span> <span class="s2">"What is the capital of France?"</span>
-<span class="n">final_response_aiot</span> <span class="o">=</span> <span class="n">iot</span><span class="o">.</span><span class="n">aiot</span><span class="p">(</span><span class="n">sample_query</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">final_response_aiot</span><span class="p">)</span>
+<pre><code>sample_query = "What is the capital of France?"
+final_response_aiot = iot.aiot(sample_query)
+print(final_response_aiot)
 </code></pre>
-</div>
 <p>In this example, we ask a straightforward question about France's capital. The AI will generate an initial response and refine it through iterations until it reaches a satisfactory answer.</p>
 <h4>Intermediate Example: Refining Responses</h4>
 <p>Now let's look at an intermediate example using GIoT:</p>
-<div class="codehilite">
-<pre><span></span><code><span class="n">sample_query</span> <span class="o">=</span> <span class="s2">"Explain photosynthesis."</span>
-<span class="n">final_response_giot</span> <span class="o">=</span> <span class="n">iot</span><span class="o">.</span><span class="n">giot</span><span class="p">(</span><span class="n">sample_query</span><span class="p">,</span> <span class="n">fixed_iterations</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">final_response_giot</span><span class="p">)</span>
+<pre><code>sample_query = "Explain photosynthesis."
+final_response_giot = iot.giot(sample_query, fixed_iterations=3)
+print(final_response_giot)
 </code></pre>
-</div>
 <p>Here, we are asking for an explanation of photosynthesis over three iterations, allowing us to obtain a more detailed understanding each time.</p>
 <h4>Advanced Example: Complex Query Iteration</h4>
 <p>For our advanced example, let's tackle a more complex query:</p>
-<div class="codehilite">
-<pre><span></span><code><span class="n">sample_query</span> <span class="o">=</span> <span class="s2">"Describe the impact of climate change on marine biodiversity."</span>
-<span class="n">final_response_aiot</span> <span class="o">=</span> <span class="n">iot</span><span class="o">.</span><span class="n">aiot</span><span class="p">(</span><span class="n">sample_query</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">final_response_aiot</span><span class="p">)</span>
+<pre><code>sample_query = "Describe the impact of climate change on marine biodiversity."
+final_response_aiot = iot.aiot(sample_query)
+print(final_response_aiot)
 </code></pre>
-</div>
 <p>This query might require multiple iterations for deeper insights into various aspects related to climate change and marine life.</p>
 <h3>5. Interactive Elements</h3>
 <h4>Quick Quiz: Test Your Knowledge 🧠✨</h4>
